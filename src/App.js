@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import React from 'react'
+import { Route } from 'react-router-dom'
 import './App.css';
+import DeckofCards from './DeckofCards'
+import TopNavigation from './TopNavigation'
+import { CSSTransition } from 'react-transition-group'
+
+const routes = [
+  { path: './DeckofCards', Component: DeckofCards }
+
+]
+
 
 function App() {
+ 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+  <TopNavigation/>
+  {routes.map(({ path, Component}) => (
+    <Route key={ path } exact path={path}>
+      {({ match}) => (
+        <CSSTransition 
+        in={match !== null}
+        timeout={300} 
+        classNames='fade'
+        unmountOnExit 
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <div className='fade'>
+            <Component/>
+          </div>
+        </CSSTransition>
+      )}
+    </Route>
+  ))}
+  </div>
   );
+
+
 }
 
 export default App;
