@@ -2,14 +2,15 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios'
 import {Card, IconButton, CardMedia, Typography, Container, 
     Dialog, Button, DialogTitle, DialogContent, DialogContentText, 
-    DialogActions, TextField} from '@material-ui/core'
+    DialogActions, TextField, Box} from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SearchIcon from '@material-ui/icons/Search';
 import AddCircleIcon from '@material-ui/icons/Add';
 import LazyLoad from 'react-lazyload'
 import './css/cardStyles.css'
-
+import { Formik } from 'formik' 
+import * as Yup from 'yup'
 
 
 const Loading = () => (
@@ -32,6 +33,58 @@ const [restartdeckData, restartsetDeckData] = useState([])
 
 const [deleteOpen, setDeleteOpen] = useState(false)
 const [selectedCard, setSelectedCard] = useState(null)
+const [editOpen, setEditOpen] = useState(false)
+
+
+
+const fetchCards = async () => {
+    try {
+    const cards = await axios.get(`http://localhost:5000/card/`)
+    setDeckData(cards.data)
+    console.log(cards.data)
+    } catch (err) {
+        console.log(err)
+    }
+    }
+    
+    
+    
+    useEffect(() => {
+        fetchCards()
+       
+    }, [])
+
+    const handleClickEditOpen = (card) => {
+        setSelectedCard(card.card) 
+        setEditOpen(true)
+    }
+
+    const handleCloseEdit = () => {
+        setEditOpen(false)
+    }
+    
+const handleUpdate = async (values) => {
+    try {
+        const result = await axios.put(`http://localhost:5000/card/update`, {
+            data: {
+                id: values._id,
+                code: values.code, 
+                image: values.image, 
+                value: values.value, 
+                suit: values.suit
+            },
+        })
+        if (result.status === 200) {
+            fetchCards()
+        }
+    } catch (err) {
+        console.error(err)
+    }
+    }
+
+
+
+
 
 const handleClickDeleteOpen = (card) => {
     console.log('You clicked to delete')
@@ -58,27 +111,6 @@ const handleDelete = async () => {
         console.error(err)
     }
 }
-
-
-const fetchCards = async () => {
-try {
-const cards = await axios.get(`http://localhost:5000/card/`)
-setDeckData(cards.data)
-console.log(cards.data)
-} catch (err) {
-    console.log(err)
-}
-}
-
-
-
-
-
-
-useEffect(() => {
-    fetchCards()
-   
-}, [])
 
 
 function hintButton() {
@@ -114,6 +146,9 @@ const fetchCardsRestart = async () => {
 
 
 
+
+
+
 return (
     <div className="main-1">
      <h1>Card Sorting</h1>
@@ -132,6 +167,10 @@ return (
                 <AddCircleIcon/>
              </IconButton>
      </form>
+
+
+
+
     {deckData.map((card) => {
      return (
     <Card className="card-container" key={card._id}>
@@ -146,7 +185,7 @@ return (
      <Typography>{card.value}</Typography>
      <Typography>OF</Typography>
      <Typography>{card.suit}</Typography>
-     <IconButton aria-label='edit'> <EditIcon/></IconButton>
+     <IconButton aria-label='edit' onClick={() => handleClickEditOpen({ card })}> <EditIcon/></IconButton>
      <IconButton aria-label='delete' onClick={() => handleClickDeleteOpen({card})}><DeleteIcon/></IconButton>
      </LazyLoad>
      </Card>
@@ -156,9 +195,155 @@ return (
      })
      }
     <div id="restartGame"></div>
+     
+     <Dialog 
+    open={editOpen}
+    onClose={handleCloseEdit}
+    aria-labelledby='edit-dial'>
+    <Formik
+    initialValues={{
+        id: selectedCard?._id, 
+        code: selectedCard?.code, 
+        image: selectedCard?.image, 
+        value: selectedCard?.value, 
+        suit: selectedCard?.suit 
+    }}
+    validationSchema={Yup.object().shape({
+        id: Yup.string('Enter Card ID').required(
+            'Card ID is required', 
+        ),
+        code: Yup.string('Enter card code').required(
+            'Card code is required',
+        ),
+        image: Yup.string('Image URL'), 
+        value: Yup.string('Value'), 
+        suit: Yup.string('Suit'), 
+    })}
+    onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
+        try {
+            await handleUpdate(values) 
+            handleCloseEdit()
+        }   catch (err) {
+            console.error(err)
+            setStatus({ success: false })
+            setErrors({ submit: err.message })
+            setSubmitting(false)
+        }
+    }}
+    >
+    {({
+        values, 
+        errors, 
+        touched, 
+        handleChange, 
+        handleBlur, 
+        handleSubmit, 
+        isSubmitting,
+    }) => (
+        <form 
+        noValidate 
+        autoComplete='off' 
+        onSubmit={handleSubmit}
+        >
+         <DialogTitle id="edit-dial">Edit Card</DialogTitle>   
+         <DialogContent>
+             <DialogContentText>
+                 Edit Information for this Card: 
+             </DialogContentText>
+             <TextField 
+            autoFocus 
+            id="id"
+            name="id"
+            label="Card ID"
+            type="text"
+            fullWidth
+            value={values._id}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={Boolean(touched._id && errors._id)} 
+            helperText={touched._id && errors._id} 
+            />
+            <TextField 
+            autoFocus 
+            id="code"
+            name="code"
+            label="Card Code"
+            type="text"
+            fullWidth
+            value={values.code}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={Boolean(touched.code && errors.code)} 
+            helperText={touched.code && errors.code} 
+            />
+            <Box>
+                <TextField 
+            autoFocus 
+            id="image"
+            name="image"
+            label="Card Image"
+            type="text"
+            fullWidth
+            value={values.image}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={Boolean(touched.image && errors.image)} 
+            helperText={touched.image && errors.image} 
+                />
+            </Box>
+            <Box>
+                <TextField 
+            autoFocus 
+            id="value"
+            name="value"
+            label="Card Value"
+            type="text"
+            fullWidth
+            value={values.value}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={Boolean(touched.value && errors.value)} 
+            helperText={touched.value && errors.value} 
 
 
-     <form>
+                />
+            </Box>
+
+
+            <Box>
+                <TextField 
+            autoFocus 
+            id="suit"
+            name="suit"
+            label="Card Suit"
+            type="text"
+            fullWidth
+            value={values.suit}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={Boolean(touched.suit && errors.suit)} 
+            helperText={touched.suit && errors.suit} 
+                />
+            </Box>
+         </DialogContent>
+         <DialogActions>
+             <Button onClick={handleCloseEdit}>Cancel</Button>
+             <Button type='submit'>Save</Button>
+         </DialogActions>
+       
+        </form>
+    )}
+
+
+
+    </Formik>
+
+    </Dialog>
+
+
+
+
+    <form>
      <Container>
         <Dialog open={deleteOpen} onClose={handleCloseDelete}>
         <DialogTitle>Delete Card</DialogTitle>
@@ -176,7 +361,14 @@ return (
 
 
      </form>
-     
+
+
+
+
+
+
+
+
    
    </div>
 
