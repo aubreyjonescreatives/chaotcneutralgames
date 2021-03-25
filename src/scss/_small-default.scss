@@ -47,12 +47,16 @@ header {
 
 
 
-/* ------------------------ENDTOPNAV----------------------------- */
+/* ------------------------TOPNAV----------------------------- */
 
 .nav-container {
     width: 100%; 
 }
 
+.menuLogo {
+    width: 50%; 
+    height: 100px; 
+}
 
 /* ------------------------MAIN----------------------------- */
 
@@ -60,10 +64,21 @@ header {
 
 h1 {
 clear: both; 
-margin: 150px 10px 100px 50px; 
-font-size: 24px; 
+margin: 50px 20px 50px 30px; 
 color: $primaryColor; 
 text-align: left; 
+font-size: 30px; 
+
+}
+
+h2 {
+    padding: 10px 0px; 
+    font-size: 28px; 
+}
+
+.buttonHint {
+    font-size: 20px; 
+    margin: 20px 0px; 
 }
 
 
@@ -82,7 +97,7 @@ text-align: left;
         clear: both; 
         display: inline-block; 
         margin: 10px; 
-        width: 100px; 
+        width: 150px; 
         
         .CardMedia {
         

@@ -1,36 +1,46 @@
 import React from 'react';
-import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/cardStyles.css'
+import { AppBar, Toolbar, IconButton, CardMedia, Typography, Button } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './assets/images/chaoticneutralgameslogo.png'
+
+
+
+
 
 
 
 function TopNavigation() {
  
 
-
 return (
   
-  <Navbar bg="light" variant="light" fixed="top" className="nav-container">
-   <figure><img src={logo}></img></figure>
-    <Navbar.Brand href="#home">Chaotic Neutral Games</Navbar.Brand>
-    <Nav className="mr-auto">
-      <Nav.Link href="#yourgames">Your Games</Nav.Link>
-      <Nav.Link href="#yourstats">Your Stats</Nav.Link>
-    </Nav>
-    <Form inline>
-      <Button variant="outline-primary">Register</Button>
-    </Form>
-    <Form inline>
-      <Button variant="outline-primary">Login</Button>
-    </Form>
-      <Nav.Link href="#settings">Settings</Nav.Link>
-  </Navbar> 
+  <div>
+      <AppBar position="static">
+        
+        <Toolbar>
+        <Button>
+         <CardMedia
+          component="img"
+          alt={'Card'}
+          image={logo}
+          className="menuLogo">
 
-)}
+         </CardMedia>
+         </Button>
+         <Typography>Your Games</Typography>
+         <Typography>Your Stats</Typography>
+          <Button color="inherit">Login</Button>
+          <IconButton edge="start" color="inherit" aria-label="menu"><MenuIcon /></IconButton>
+        </Toolbar>
+      </AppBar>
+    </div>
 
+)
+
+}
 
 export default TopNavigation; 
   

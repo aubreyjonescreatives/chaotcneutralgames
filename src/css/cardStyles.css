@@ -99,24 +99,34 @@ body {
 
 /* ------------------------HEADER----------------------------- */
 /* ------------------------END HEADER----------------------------- */
-/* ------------------------ENDTOPNAV----------------------------- */
+/* ------------------------TOPNAV----------------------------- */
 .nav-container {
   width: 100%; }
+
+.menuLogo {
+  width: 50%;
+  height: 100px; }
 
 /* ------------------------MAIN----------------------------- */
 .main-1 {
   /* ------------------------TOPNAV----------------------------- */ }
   .main-1 h1 {
     clear: both;
-    margin: 150px 10px 100px 50px;
-    font-size: 24px;
+    margin: 50px 20px 50px 30px;
     color: #000000;
-    text-align: left; }
+    text-align: left;
+    font-size: 30px; }
+  .main-1 h2 {
+    padding: 10px 0px;
+    font-size: 28px; }
+  .main-1 .buttonHint {
+    font-size: 20px;
+    margin: 20px 0px; }
   .main-1 .card-container {
     clear: both;
     display: inline-block;
     margin: 10px;
-    width: 100px; }
+    width: 150px; }
     .main-1 .card-container .CardMedia {
       width: 100%;
       height: 100%; }
