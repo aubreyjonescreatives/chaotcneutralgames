@@ -3,7 +3,7 @@ import './css/cardStyles.css'
 import { AppBar, Toolbar, IconButton, CardMedia, Typography, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './assets/images/chaoticneutralgameslogo.png'
 
 
