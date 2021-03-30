@@ -13,6 +13,10 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 
 
+const PORT = process.env.PORT || 5000
+
+
+
 const Loading = () => (
 <div>
 <h4>Loading...</h4>
@@ -28,7 +32,7 @@ const DeckofCards = () => {
 
 const [deckData, setDeckData] = useState([])
 
-const [restartdeckData, restartsetDeckData] = useState([])
+//const [restartdeckData, restartsetDeckData] = useState([])
 
 
 const [deleteOpen, setDeleteOpen] = useState(false)
@@ -39,7 +43,7 @@ const [editOpen, setEditOpen] = useState(false)
 
 const fetchCards = async () => {
     try {
-    const cards = await axios.get(`http://localhost:5000/card/`)
+    const cards = await axios.get(`http://localhost:${PORT}/card`)
     setDeckData(cards.data)
     console.log(cards.data)
     } catch (err) {
@@ -65,7 +69,7 @@ const fetchCards = async () => {
     
 const handleUpdate = async (values) => {
     try {
-        const result = await axios.put(`http://localhost:5000/card/update`, {
+        const result = await axios.put(`http://localhost:${PORT}/card/update`, {
             data: {
                 id: values._id,
                 code: values.code, 
@@ -101,7 +105,7 @@ const handleDelete = async () => {
     setDeleteOpen(false)
     console.log(selectedCard._id)
     try {
-        await axios.delete(`http://localhost:5000/card/delete`, { 
+        await axios.delete(`http://localhost:${PORT}/card/delete`, { 
         data: {   
         cardId: selectedCard._id
         }
@@ -125,24 +129,24 @@ function hintButton() {
 }
 
 
-function restartButton() {
+//function restartButton() {
 
-    
-const fetchCardsRestart = async () => {
-    try {
-    const cards = await axios.get(`https://deckofcardsapi.com/api/deck/new/draw/?count=52`)
-    restartsetDeckData(cards.data)
-    console.log(cards.data)
-    document.getElementById('restartGame').textContent = cards.data
-    } catch (err) {
-        console.log(err)
-    }
-    
-    }
 
-    fetchCardsRestart()
+// const fetchCardsRestart = async () => {
+//     try {
+//     const cards = await axios.get(`https://deckofcardsapi.com/api/deck/new/draw/?count=52`)
+//     restartsetDeckData(cards.data)
+//     console.log(cards.data)
+//     document.getElementById('restartGame').textContent = cards.data
+//     } catch (err) {
+//         console.log(err)
+//     }
+    
+//     }
+
+//     fetchCardsRestart()
   
-}
+// }
 
 
 
@@ -155,8 +159,8 @@ return (
      <h2>How Fast Can You Make a Full Suit?</h2>
     
     <button className="buttonHint" onClick={hintButton}>Show Hint</button>
-    <button className="buttonHint" onClick={restartButton}>Restart</button>
-     <h2 id="gameHints"></h2>
+  
+     <div id="gameHints"></div>
      <div></div>
      <form>
          <TextField placeholder='Search' />
