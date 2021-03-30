@@ -4,4 +4,6 @@
 
 ## You will need to change the CRUD paths to access your localhost if you do not connect this to a database 
 
+## add a .env file to import your .env PORT 
+
 ## I am still working on overall functionality so that I can deploy this app while combining back end to front end
