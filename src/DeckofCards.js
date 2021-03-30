@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios'
+import _ from 'lodash'
 import {Card, IconButton, CardMedia, Typography, Container, 
     Dialog, Button, DialogTitle, DialogContent, DialogContentText, 
     DialogActions, TextField, Box} from '@material-ui/core'
@@ -38,7 +39,7 @@ const [deckData, setDeckData] = useState([])
 const [deleteOpen, setDeleteOpen] = useState(false)
 const [selectedCard, setSelectedCard] = useState(null)
 const [editOpen, setEditOpen] = useState(false)
-
+const [debouncedName, setDebouncedName] = useState('')
 
 
 const fetchCards = async () => {
@@ -57,6 +58,26 @@ const fetchCards = async () => {
         fetchCards()
        
     }, [])
+
+
+    const handleInput = (event) => {
+        debounce(event.target.value)
+    }
+
+    const debounce = useCallback(
+        _.debounce((searchVal) => {
+            setDebouncedName(searchVal)
+        }, 1000), 
+        [],
+    )
+
+    const handleSearch = () => {
+        if (debouncedName) {
+            setDeckData(deckData.filter(deck => deck._id.includes(debouncedName)))
+        } else {
+            fetchCards()
+        }
+    }
 
     const handleClickEditOpen = (card) => {
         setSelectedCard(card.card) 
@@ -163,8 +184,8 @@ return (
      <div id="gameHints"></div>
      <div></div>
      <form>
-         <TextField placeholder='Search' />
-         <IconButton aria-label='search'>
+         <TextField placeholder='Search' onChange={handleInput} />
+         <IconButton aria-label='search' onClick={handleSearch}>
              <SearchIcon />
              </IconButton>
              <IconButton aria-label='add card'>
