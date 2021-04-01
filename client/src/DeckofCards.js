@@ -14,7 +14,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 
 
 
